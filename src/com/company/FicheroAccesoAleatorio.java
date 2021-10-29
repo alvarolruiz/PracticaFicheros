@@ -6,15 +6,34 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class FicheroAccesoAleatorio {
-
+    private static final int LONGITUD_NOMBRE=25*2; //String
+    private static final int LONGITUD_APELLIDO=25*2; //String
+    private static final int LONGITUD_DNI=9*2; //String
+    private static final int LONGITUD_TELEFONO=9*4; //int
+    private static final int LONGITUD_DIRECCION=30*2; //String
+    private static final int LONGITUD_TOTAL_CLIENTES=LONGITUD_NOMBRE+ LONGITUD_APELLIDO+LONGITUD_DNI+LONGITUD_TELEFONO+LONGITUD_DIRECCION;
+    private static final int LONGITUD_TOTAL_INDICE=LONGITUD_DNI+4;
     public RandomAccessFile  ficheroClientes;
+    public RandomAccessFile  ficheroIndice;
     public int tamanoRegistros;
     public int numeroRegistros;
 
-    public FicheroAccesoAleatorio(String nombre, String permisos) throws FileNotFoundException {
+    public FicheroAccesoAleatorio(String nombre, String permisos, String tipo) throws FileNotFoundException {
         this.ficheroClientes = new RandomAccessFile(new File(nombre),permisos);
-        this.tamanoRegistros = calcularTamanoRegistros();
+        if(tipo=="DatosClientes"){
+            this.tamanoRegistros = LONGITUD_TOTAL_CLIENTES;
+        }else if (tipo == "IndiceClientes"){
+            this.tamanoRegistros = LONGITUD_TOTAL_INDICE;
+        }
         this.numeroRegistros=0;
+    }
+
+    public void escribirFichero (byte[] cliente){
+        ficheroClientes.write();
+    }
+
+    public static byte[] obtenerBytes(){
+
     }
 
     public static void eliminarFicheroSiExiste (String nombre) throws FileNotFoundException{
@@ -22,23 +41,12 @@ public class FicheroAccesoAleatorio {
             if (file.exists()) {
                 file.delete();
             }
-        }
+    }
 
-       public void close() throws IOException{
+    public void close() throws IOException{
         if(ficheroClientes!=null){
             ficheroClientes.close();
         }
-       }
-
-
-    public int calcularTamanoRegistros(){
-        int total;
-        int nombre=25;
-        int apellido=25;
-        int dni=9;
-        int tlf=9;
-        int direccion=30;
-        total=nombre+apellido+dni+tlf+direccion;
-        return total;
     }
+
 }

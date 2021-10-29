@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 
 public class Main {
-public static final String NOMBRE_FICHERO = new File("clientes.bin");
+
 public static Scanner tecla = new Scanner(System.in);
 public static Gestora gestora = new Gestora();
 
