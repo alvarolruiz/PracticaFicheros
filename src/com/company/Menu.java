@@ -1,46 +1,43 @@
 package com.company;
 
+import java.io.RandomAccessFile;
+
 import static com.company.Main.tecla;
 
 public class Menu {
 
-    public static boolean fin = false;
-
-    public Menu() {
-    }
-
-    public static void menuPrincipal() {
-            while (fin!=true) {
-                System.out.println("Gestor de clientes:");
+    /**Imprime el menú y devuelve un entero con la opción escogida por el usuario, la cual será
+     * Validada previamente
+     *
+     * @return int
+     */
+    public static int imprimirMenuPrincipal() {
+        int opcion;
+            do {
+                System.out.println("Menu Principal:");
                 System.out.println("------------------");
-                System.out.println("1. Nuevo cliente");
+                System.out.println("1. Nuevo cliente.");
                 System.out.println("2. Consultar cliente.");
                 System.out.println("3. Borrar cliente.");
                 System.out.println("4. Configuración de exportación.");
                 System.out.println("5. Exportar clientes.");
                 System.out.println("0. Salir.");
                 System.out.println("Introduce una opción");
-                eleccionMenu();
-            }
-        }
-
-        private static void eleccionMenu() {
-            int eleccion;
-            eleccion = tecla.nextInt();
-            switch (eleccion){
-                case(1): añadirCliente();
-                    break;
-                case(2): añadirCliente();
-                    break;
-                case(3): añadirCliente();
-                    break;
-                case(4): añadirCliente();
-                    break;
-                case(5): añadirCliente();
-                    break;
-                case(0): this.fin==true;
-                    break;
-            }
-        }
+                opcion = tecla.nextInt();
+            }while (!validarOpcion(opcion));
+        return opcion;
     }
+
+
+    private static boolean validarOpcion(int op) {
+    boolean b=false;
+        if(op>=0&&op<=5){
+            b=true;
+        }else{
+            System.out.println("Opción no valida");
+        }
+        return b;
+    }
+}
+
 
