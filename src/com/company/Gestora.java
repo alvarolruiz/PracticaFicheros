@@ -1,7 +1,9 @@
 package com.company;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import static com.company.Main.tecla;
@@ -12,12 +14,12 @@ public class Gestora {
     public static final String NOMBRE_FICHERO_INDICE = "indice_clientes.bin";
     public static int POSICION;
     public static FicheroAccesoAleatorio clientes;
-    public static FicheroAccesoAleatorio indice;
+
 
     static {
         try {
             clientes = new FicheroAccesoAleatorio(NOMBRE_FICHERO_DATOS, "rw", "DatosClientes");
-            indice= new FicheroAccesoAleatorio(NOMBRE_FICHERO_INDICE,"rw", "IndiceClientes");
+
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -66,15 +68,17 @@ public class Gestora {
         telefono = validarTelefono();
         String direccion;
         direccion= validarDireccion();
-        FicheroAccesoAleatorio
+
+        try {
+            clientes.escribirFichero(nombre,apellidos,dni,telefono,direccion);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         POSICION++;
     }
 
-    private void escribirFichero(Cliente cliente) {
-        StringBuffer sb = new StringBuffer(cliente.getNombre());
-        sb.setLength(25);
-        cliente.getNombre();
-    }
+
 
 
 

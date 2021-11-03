@@ -23,11 +23,6 @@ public static Gestora gestora = new Gestora();
 
     public static void main(String[] args) {
         Gestora.accionMenu();
-        try {
-            FicheroAccesoAleatorio clientes= new FicheroAccesoAleatorio(NOMBRE_FICHERO, "rw");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
 
 
         // write your code here
