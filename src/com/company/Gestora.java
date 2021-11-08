@@ -66,7 +66,9 @@ public class Gestora {
         telefono = validarTelefono();
         String direccion;
         direccion= validarDireccion();
-        FicheroAccesoAleatorio
+        Cliente clienteTemporal= new Cliente(nombre,apellidos, dni,String.valueOf(telefono),direccion);
+
+        clientes.escribirFichero(clienteTemporal);
         POSICION++;
     }
 
