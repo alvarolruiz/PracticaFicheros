@@ -24,20 +24,12 @@ public class Menu {
                 System.out.println("0. Salir.");
                 System.out.println("Introduce una opción");
                 opcion = tecla.nextInt();
-            }while (!validarOpcion(opcion));
+            }while (!Validaciones.validarOpcionMenu(opcion));
         return opcion;
     }
 
 
-    private static boolean validarOpcion(int op) {
-    boolean b=false;
-        if(op>=0&&op<=5){
-            b=true;
-        }else{
-            System.out.println("Opción no valida");
-        }
-        return b;
-    }
+
 }
 
 
