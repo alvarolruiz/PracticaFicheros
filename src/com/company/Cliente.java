@@ -1,6 +1,8 @@
 package com.company;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable {
     private String nombre;
     private String apellidos;
     private String dni;
@@ -60,13 +62,7 @@ public class Cliente {
 
     @Override
         public String toString () {
-            return "Cliente{" +
-                    "nombre='" + nombre + '\'' +
-                    ", apellidos='" + apellidos + '\'' +
-                    ", dni='" + dni + '\'' +
-                    ", telefono=" + telefono +
-                    ", direccion='" + direccion + '\'' +
-                    '}';
+            return this.getNombre()+", "+this.getApellidos()+", "+this.getDni()+", "+this.getDireccion()+".\n";
         }
 
 

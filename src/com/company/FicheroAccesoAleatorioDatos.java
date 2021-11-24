@@ -1,30 +1,60 @@
 package com.company;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
-public class FicheroAccesoAleatorioDatos implements Serializable {
+public class FicheroAccesoAleatorioDatos {
     private static final int LONGITUD_NOMBRE=25*2; //String
     private static final int LONGITUD_APELLIDO=25*2; //String
     private static final int LONGITUD_DNI=9*2; //String
     private static final int LONGITUD_TELEFONO=9*4; //int
     private static final int LONGITUD_DIRECCION=30*2; //String
     private static final int NUMERO_CAMPOS=5; //String
-    private static final int LONGITUD_TOTAL_CLIENTES=LONGITUD_NOMBRE+ LONGITUD_APELLIDO+LONGITUD_DNI+LONGITUD_TELEFONO+LONGITUD_DIRECCION;
+    private static final int TAMAÑO_REGISTROS =LONGITUD_NOMBRE+ LONGITUD_APELLIDO+LONGITUD_DNI+LONGITUD_TELEFONO+LONGITUD_DIRECCION;
+    private static byte []array=null;
+    private static ByteArrayOutputStream escribir=null;
+    private static ObjectOutputStream salida=null;
+    private static ByteArrayInputStream leer=null;
+    private static ObjectInputStream entrada = null;
     public RandomAccessFile  ficheroClientes;
     public int tamanoRegistros;
-    public int numeroRegistros;
+
 
     public FicheroAccesoAleatorioDatos(String nombre, String permisos) throws FileNotFoundException {
             this.ficheroClientes = new RandomAccessFile(new File(nombre),permisos);
-            this.tamanoRegistros = LONGITUD_TOTAL_CLIENTES;
+            this.tamanoRegistros = TAMAÑO_REGISTROS;
 
     }
 
-    public void escribirRegistro(Cliente registro){
+    public void escribirRegistro(Cliente registro) throws IOException {
+
+
+        // Ponemos el puntero al final del archivo
+        ficheroClientes.seek(ficheroClientes.length());
+        // Serializamos el objeto Persona
+        // Lo convertimos en una secuencia de bytees.
+        escribir= new ByteArrayOutputStream();
+        salida = new ObjectOutputStream(escribir);
+        salida.writeObject(registro.toString());
+
+        // Cerramos el objeto.
+        salida.close();
+
+        // obtenemos los bytes del libro serializado
+        array = escribir.toByteArray();
+
+        // Escribimos los bytes en el archivo.
+        ficheroClientes.write(array);
+
+        // Cerramos el archivo
+        ficheroClientes.close();
+    } catch (Exception e) {
+        System.out.println("No se puede escribir en el archivo"
+                + e.getMessage());
+    }
+
+            /*
             int tamanoCampo=0;
             String campo="";
-
             for (int i = 0; i < NUMERO_CAMPOS; i++) {
             tamanoCampo= setTamanoCampo(i);
             campo= setCampo(i,registro);
@@ -38,7 +68,7 @@ public class FicheroAccesoAleatorioDatos implements Serializable {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
+*/
                 //Preguntar por finally
                     /*finally {
                         try {
@@ -49,11 +79,7 @@ public class FicheroAccesoAleatorioDatos implements Serializable {
                         }
                     }*/
             }
-            try {
-                ficheroClientes.close();
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+
 
     }
 
@@ -135,7 +161,7 @@ public class FicheroAccesoAleatorioDatos implements Serializable {
     }
 
     public void leerRegistro(int pos) throws IOException {
-        ficheroClientes.seek(pos *LONGITUD_TOTAL_CLIENTES);
+        ficheroClientes.seek(pos * TAMAÑO_REGISTROS);
         ficheroClientes.read();
     }
 
