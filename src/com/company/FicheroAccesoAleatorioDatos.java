@@ -15,41 +15,47 @@ public class FicheroAccesoAleatorioDatos {
     private static ObjectOutputStream salida=null;
     private static ByteArrayInputStream leer=null;
     private static ObjectInputStream entrada = null;
+    public String nombreFichero;
+    public String permisos;
+
     public RandomAccessFile  ficheroClientes;
     public int tamanoRegistros;
 
 
     public FicheroAccesoAleatorioDatos(String nombre, String permisos) throws FileNotFoundException {
-            this.ficheroClientes = new RandomAccessFile(new File(nombre),permisos);
+        this.nombreFichero=nombre;
+        this.permisos=permisos;
+            this.ficheroClientes = new RandomAccessFile(new File(nombreFichero),permisos);
             this.tamanoRegistros = TAMAÑO_REGISTROS;
 
     }
 
-    public void escribirRegistro(Cliente registro) throws IOException {
+    public void escribirRegistro( Cliente registro) {
 
+        try {
+    ficheroClientes= new RandomAccessFile(new File(nombreFichero),permisos);
+            // Ponemos el puntero al final del archivo
+            ficheroClientes.seek(ficheroClientes.length());
+            // Serializamos el objeto Persona
+            // Lo convertimos en una secuencia de bytees.
+            escribir = new ByteArrayOutputStream();
+            salida = new ObjectOutputStream(escribir);
+            salida.writeObject(registro);
 
-        // Ponemos el puntero al final del archivo
-        ficheroClientes.seek(ficheroClientes.length());
-        // Serializamos el objeto Persona
-        // Lo convertimos en una secuencia de bytees.
-        escribir= new ByteArrayOutputStream();
-        salida = new ObjectOutputStream(escribir);
-        salida.writeObject(registro.toString());
+            // Cerramos el objeto.
+            salida.close();
 
-        // Cerramos el objeto.
-        salida.close();
+            // obtenemos los bytes del libro serializado
+            array = escribir.toByteArray();
 
-        // obtenemos los bytes del libro serializado
-        array = escribir.toByteArray();
+            // Escribimos los bytes en el archivo.
+            ficheroClientes.write(array);
 
-        // Escribimos los bytes en el archivo.
-        ficheroClientes.write(array);
-
-        // Cerramos el archivo
-        ficheroClientes.close();
-    } catch (Exception e) {
-        System.out.println("No se puede escribir en el archivo"
-                + e.getMessage());
+            // Cerramos el archivo
+            ficheroClientes.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
             /*
@@ -78,10 +84,10 @@ public class FicheroAccesoAleatorioDatos {
                             e.printStackTrace();
                         }
                     }*/
-            }
 
 
-    }
+
+
 
     /**Devuelve un String con el contenido que corresponde a determinado campo
      * @param i entero que determina el campo que será escrito
@@ -166,3 +172,4 @@ public class FicheroAccesoAleatorioDatos {
     }
 
 }
+
