@@ -16,7 +16,7 @@ public class Gestora {
 
     static {
         try {
-            clientes = new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_DATOS, "rw");
+            clientes = new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_DATOS, "rw",Utilidades.getTamanoRegistros());
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }
@@ -59,8 +59,7 @@ public class Gestora {
 
     private static void anadirCliente () {
         System.out.println("Introduce los siguientes datos para añadir un cliente nuevo.");
-        String nombre;
-        nombre = Validaciones.validarNombre_Apellidos("Nombre");
+        String nombre = Validaciones.validarNombre_Apellidos("Nombre");
         String apellidos;
         apellidos= Validaciones.validarNombre_Apellidos("Apellidos");
         String dni;
@@ -79,7 +78,6 @@ public class Gestora {
         System.out.println("Introduce la posicion del cliente a consultar");
         pos = tecla.nextInt();
         try {
-
             clientes.leerRegistro(pos);
         } catch (IOException e) {
             e.printStackTrace();
