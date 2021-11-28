@@ -19,6 +19,7 @@ public class Validaciones {
      * @return boolean
      */
     public static boolean validarOpcionMenu(int op) {
+        //TODO no puede recibir como parametro un string;
         boolean b=false;
         if(op>=0&&op<=5){
             b=true;

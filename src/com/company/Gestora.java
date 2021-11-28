@@ -17,6 +17,7 @@ public class Gestora {
     static {
         try {
             clientes = new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_DATOS, "rw",Utilidades.getTamanoRegistros());
+            indice = new FicheroAccesoAleatorioIndice(NOMBRE_FICHERO_INDICE);
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }
@@ -50,6 +51,7 @@ public class Gestora {
                     exportarClientes();
                     break;
                 case (0):
+                    indice.escribirMapEnFile();
                     fin = true;
                     break;
 
@@ -60,25 +62,25 @@ public class Gestora {
     private static void anadirCliente () {
         System.out.println("Introduce los siguientes datos para añadir un cliente nuevo.");
         String nombre = Validaciones.validarNombre_Apellidos("Nombre");
-        String apellidos;
-        apellidos= Validaciones.validarNombre_Apellidos("Apellidos");
-        String dni;
-        dni = Validaciones.validarDni();
-        int telefono;
-        telefono = Validaciones.validarTelefono();
-        String direccion;
-        direccion= Validaciones.validarDireccion();
+        String apellidos= Validaciones.validarNombre_Apellidos("Apellidos");
+        String dni = Validaciones.validarDni();
+        int telefono = Validaciones.validarTelefono();
+        String direccion = Validaciones.validarDireccion();
         Cliente cliente= new Cliente(nombre,apellidos, dni,String.valueOf(telefono),direccion);
         clientes.escribirRegistro(cliente);
-        POSICION++;
+        try {
+            indice.añadirIndice(cliente.getDni());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void consultarCliente () {
-        int pos = 0;
-        System.out.println("Introduce la posicion del cliente a consultar");
-        pos = tecla.nextInt();
+        String dni ="";
+        System.out.println("Introduce el dni del cliente a consultar");
+        int posicion = indice.getPosicionRegistro(tecla.nextLine());
         try {
-            clientes.leerRegistro(pos);
+            clientes.leerRegistro(posicion);
         } catch (IOException e) {
             e.printStackTrace();
         }
