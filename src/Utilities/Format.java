@@ -2,9 +2,7 @@ package Utilities;
 
 public class Format {
 
-    public static int getTamanoRegistros(){
-      return  Validaciones.getTamañoRegistros();
-    }
+
 
     public static String formatearString(String cadenaAFormatear, int longCadena){
         String formatoCadena = obtenerFormatoString(longCadena);

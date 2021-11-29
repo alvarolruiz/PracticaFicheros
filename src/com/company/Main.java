@@ -19,11 +19,13 @@ import java.util.Scanner;
 public class Main {
 
 
-    public static Scanner tecla = new Scanner(System.in);
-public static Gestora gestora = new Gestora();
+public static Scanner tecla = new Scanner(System.in);
+
+
 
     public static void main(String[] args) {
-        Gestora.accionMenu();
+    Gestora gestora = new Gestora();
+        gestora.accionMenu();
 
 
 

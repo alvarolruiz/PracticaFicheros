@@ -16,7 +16,13 @@ public class FicheroAccesoAleatorioDatos {
             this.tamanoRegistros = tamanoRegistros;
     }
 
-    public void escribirRegistro( Cliente registro) throws IOException {
+    /**
+     * Escribe un cliente completo en el random access file.
+     * Precondiciones: Que el cliente recibido no sea nulo
+     * @param registro
+     * @throws IOException
+     */
+    public void escribirRegistro(Cliente registro) throws IOException {
         ObjectOutputStream oos=null;
         try (FileOutputStream salida = new FileOutputStream(nombreFichero,true)){
             if(ficheroClientes.length()<0) {
@@ -25,6 +31,8 @@ public class FicheroAccesoAleatorioDatos {
                 oos=new MyObjectOutputStream(salida);
             }
             oos.writeObject(registro);
+            oos.flush();
+            oos.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -32,8 +40,26 @@ public class FicheroAccesoAleatorioDatos {
         }
     }
 
+    /**
+     * Recibe una posición y lee el cliente que se encuentre en ella
+     * Precondiciones: Que el fichero contenga algún registro en esa posición
+     * @param pos
+     * @throws IOException
+     */
     public void leerRegistro(int pos) throws IOException {
         int posicion = pos*tamanoRegistros;
+/*
+        ObjectInputStream ois =null;
+        try(FileInputStream fis = new FileInputStream(nombreFichero)){
+            ois = new ObjectInputStream(fis);
+            Cliente c;
+            c = (Cliente)ois.readObject();
+            System.out.println(c);
+            ois.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }*/
+
         byte [] array = new byte[(int)ficheroClientes.length()];
         try (ByteArrayInputStream leer = new ByteArrayInputStream(array);
              ObjectInputStream entrada = new ObjectInputStream(leer)){
@@ -49,7 +75,12 @@ public class FicheroAccesoAleatorioDatos {
         }
     }
 
-    private static void eliminarFicheroSiExiste (String nombre) throws FileNotFoundException{
+    /**
+     * Elimina el fichero con el nombre pasado por prámetro si existe.
+     * @param nombre
+     * @throws FileNotFoundException
+     */
+    public void eliminarFicheroSiExiste (String nombre) throws FileNotFoundException{
             File file = new File(nombre);
             if (file.exists()) {
                 file.delete();
