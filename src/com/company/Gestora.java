@@ -52,7 +52,6 @@ public class Gestora {
                     exportarClientes();
                     break;
                 case (0):
-                    indice.escribirMapEnFile();
                     fin = true;
                     break;
 
@@ -70,7 +69,6 @@ public class Gestora {
         Cliente cliente = new Cliente(nombre, apellidos, dni, String.valueOf(telefono), direccion);
         try {
             clientes.escribirRegistro(cliente);
-            indice.añadirIndice(cliente.getDni());
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,8 +76,8 @@ public class Gestora {
     }
     private static void consultarCliente () {
         String dni ="";
-        System.out.println("Introduce el dni del cliente a consultar");
-        int posicion = indice.getPosicionRegistro(tecla.nextLine());
+        System.out.println("Introduce la pos del cliente a consultar");
+        int posicion = tecla.nextInt();
         try {
             clientes.leerRegistro(posicion);
         } catch (IOException e) {

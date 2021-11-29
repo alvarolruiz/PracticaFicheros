@@ -8,20 +8,23 @@ public class FicheroAccesoAleatorioDatos {
 
     public RandomAccessFile  ficheroClientes;
     public int tamanoRegistros;
+    public String nombreFichero;
 
     public FicheroAccesoAleatorioDatos(String nombre, String permisos, int tamanoRegistros) throws FileNotFoundException {
-            this.ficheroClientes = new RandomAccessFile(new File(nombre),permisos);
+        this.nombreFichero=nombre;
+            this.ficheroClientes = new RandomAccessFile(new File(nombreFichero),permisos);
             this.tamanoRegistros = tamanoRegistros;
     }
 
     public void escribirRegistro( Cliente registro) throws IOException {
-        try (ByteArrayOutputStream escribir = new ByteArrayOutputStream();
-             ObjectOutputStream salida = new ObjectOutputStream(escribir)){
-            ficheroClientes.seek(ficheroClientes.length());
-            salida.writeObject((Cliente)registro);
-            salida.flush();
-            byte [] array = escribir.toByteArray();
-            ficheroClientes.write(array);
+        ObjectOutputStream oos=null;
+        try (FileOutputStream salida = new FileOutputStream(nombreFichero,true)){
+            if(ficheroClientes.length()<0) {
+                oos=new ObjectOutputStream(salida);
+            }else{
+                oos=new MyObjectOutputStream(salida);
+            }
+            oos.writeObject(registro);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -35,7 +38,7 @@ public class FicheroAccesoAleatorioDatos {
         try (ByteArrayInputStream leer = new ByteArrayInputStream(array);
              ObjectInputStream entrada = new ObjectInputStream(leer)){
             ficheroClientes.seek(posicion);
-            ficheroClientes.readFully(array);
+            ficheroClientes.read(array);
             Object clienteLeido;
             clienteLeido = entrada.readObject();
             System.out.println(clienteLeido);
