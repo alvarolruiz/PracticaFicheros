@@ -1,4 +1,4 @@
-package com.company;
+package FileManager;
 
 import java.io.*;
 import java.util.HashMap;
@@ -74,10 +74,9 @@ public class FicheroAccesoAleatorioIndice {
     }
 
     public int getPosicionRegistro(String dni){
-        try {
             return this.mapIndice.get(dni);
 
-        }catch ()
+
     }
 
 }

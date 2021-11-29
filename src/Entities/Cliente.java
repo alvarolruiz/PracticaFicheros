@@ -1,4 +1,4 @@
-package com.company;
+package Entities;
 
 import java.io.Serializable;
 

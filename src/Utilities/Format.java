@@ -1,6 +1,6 @@
-package com.company;
+package Utilities;
 
-public class Utilidades {
+public class Format {
 
     public static int getTamanoRegistros(){
       return  Validaciones.getTamañoRegistros();

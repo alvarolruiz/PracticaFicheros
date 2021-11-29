@@ -1,13 +1,13 @@
-package com.company;
+package View;
 
-import java.io.RandomAccessFile;
+import Utilities.Validaciones;
 
 import static com.company.Main.tecla;
 
 public class Menu {
 
-    /**Imprime el menú y devuelve un entero con la opción escogida por el usuario, la cual será
-     * Validada previamente
+    /**
+     * Imprime el menú y devuelve un entero con la opción escogida por el usuario
      *
      * @return int
      */

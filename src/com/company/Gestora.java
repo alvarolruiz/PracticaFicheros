@@ -1,10 +1,16 @@
 package com.company;
 
+import Entities.Cliente;
+import FileManager.FicheroAccesoAleatorioDatos;
+import FileManager.FicheroAccesoAleatorioIndice;
+import Utilities.Format;
+import Utilities.Validaciones;
+import View.Menu;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static com.company.Main.tecla;
-import static com.company.Validaciones.validarTelefono;
 
 public class Gestora {
 
@@ -16,16 +22,11 @@ public class Gestora {
 
     static {
         try {
-            clientes = new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_DATOS, "rw",Utilidades.getTamanoRegistros());
+            clientes = new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_DATOS, "rw", Format.getTamanoRegistros());
             indice = new FicheroAccesoAleatorioIndice(NOMBRE_FICHERO_INDICE);
         }catch (FileNotFoundException e){
             e.printStackTrace();
         }
-        /*try {
-            indice= new FicheroAccesoAleatorioDatos(NOMBRE_FICHERO_INDICE,"rw");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
 
     public static void accionMenu() {
@@ -62,19 +63,19 @@ public class Gestora {
     private static void anadirCliente () {
         System.out.println("Introduce los siguientes datos para añadir un cliente nuevo.");
         String nombre = Validaciones.validarNombre_Apellidos("Nombre");
-        String apellidos= Validaciones.validarNombre_Apellidos("Apellidos");
+        String apellidos = Validaciones.validarNombre_Apellidos("Apellidos");
         String dni = Validaciones.validarDni();
         int telefono = Validaciones.validarTelefono();
         String direccion = Validaciones.validarDireccion();
-        Cliente cliente= new Cliente(nombre,apellidos, dni,String.valueOf(telefono),direccion);
-        clientes.escribirRegistro(cliente);
+        Cliente cliente = new Cliente(nombre, apellidos, dni, String.valueOf(telefono), direccion);
         try {
+            clientes.escribirRegistro(cliente);
             indice.añadirIndice(cliente.getDni());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     private static void consultarCliente () {
         String dni ="";
         System.out.println("Introduce el dni del cliente a consultar");

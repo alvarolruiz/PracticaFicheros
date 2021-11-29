@@ -1,4 +1,6 @@
-package com.company;
+package Utilities;
+
+import java.util.InputMismatchException;
 
 import static com.company.Main.tecla;
 
@@ -14,7 +16,9 @@ public class Validaciones {
     public static int getTamañoRegistros(){
         return  TAMAÑO_REGISTROS;
     }
-    /**Valida si la opción recibida se encuentra entre las posibles del menú
+    /**
+     * Valida si la opción recibida se encuentra entre las posibles del menú
+     *
      * @param op
      * @return boolean
      */
@@ -29,7 +33,9 @@ public class Validaciones {
         return b;
     }
 
-    /** Comprueba que el nombre o apellidos son de tamaño 25 o menos y que no son nulos
+    /**
+     * Comprueba que el nombre o apellidos son de tamaño 25 o menos y que no son nulos
+     *
      * @param opcion nombre o apellidos
      * @return string nombre/Apellido valido
      */
@@ -48,8 +54,13 @@ public class Validaciones {
                 System.out.println(opcion +" no válido. "+opcion+" no puede tener más de 25 caracteres ni estar vacío");
             }
         }while(!correcto);
-        return Utilidades.formatearString(name,LONGITUD_NOMBRE);
+        return Format.formatearString(name,LONGITUD_NOMBRE);
     }
+
+    /**
+     * Método que comprueba que la letra de un dni recibido por teclado es correcta
+     * @return
+     */
 
     public static String validarDni() {
         char caracteres[] = {'T','R','W','A','G','M','Y','F','P','D','X','B','N','J','Z','S','Q','V','H','L','C','K','E'};
@@ -76,22 +87,28 @@ public class Validaciones {
                 System.out.println("Dni incorrecto");
             }
         }while(!correcto);
-        return Utilidades.formatearString(dni, LONGITUD_DNI);
+        return Format.formatearString(dni, LONGITUD_DNI);
     }
 
     public static int validarTelefono() {
-        int telefono;
+        int telefono=0;
         boolean correcto = false;
         System.out.println("Teléfono: ");
-        do {
-            telefono = tecla.nextInt();
-            if (telefono != 0 && String.valueOf(telefono).length() == LONGITUD_TELEFONO) {
-                correcto=true;
-            } else {
-                System.out.println("Telefono incorrecto, escriba uno válido");
-            }
-        }while(!correcto);
-        return Utilidades.formatearInt(telefono,LONGITUD_TELEFONO);
+        try {
+            do {
+                telefono = tecla.nextInt();
+                if (telefono != 0 && String.valueOf(telefono).length() == LONGITUD_TELEFONO) {
+                    correcto=true;
+                } else {
+                    System.out.println("Telefono incorrecto, escriba uno válido");
+                }
+            }while(!correcto);
+        }catch (InputMismatchException e){
+            e.printStackTrace();
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+        return Format.formatearInt(telefono,LONGITUD_TELEFONO);
     }
 
     public static String validarDireccion() {
@@ -107,6 +124,6 @@ public class Validaciones {
                 System.out.println("La direccion no puede tener más de 30 caracteres ni estar vacío");
             }
         }while(!correcto);
-        return Utilidades.formatearString(direccion, LONGITUD_DIRECCION);
+        return Format.formatearString(direccion, LONGITUD_DIRECCION);
     }
 }
