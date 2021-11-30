@@ -7,12 +7,14 @@ import java.io.*;
 public class FicheroAccesoAleatorioDatos {
 
     public RandomAccessFile  ficheroClientes;
+    public File archivo;
     public int tamanoRegistros;
     public String nombreFichero;
 
     public FicheroAccesoAleatorioDatos(String nombre, String permisos, int tamanoRegistros) throws FileNotFoundException {
         this.nombreFichero=nombre;
-            this.ficheroClientes = new RandomAccessFile(new File(nombreFichero),permisos);
+        archivo= new File(nombre);
+            this.ficheroClientes = new RandomAccessFile(archivo,permisos);
             this.tamanoRegistros = tamanoRegistros;
     }
 
@@ -23,13 +25,11 @@ public class FicheroAccesoAleatorioDatos {
      * @throws IOException
      */
     public void escribirRegistro(Cliente registro) throws IOException {
+        //Si no funciona escribir campo por campo y despues hacer seek.
         ObjectOutputStream oos=null;
         try (FileOutputStream salida = new FileOutputStream(nombreFichero,true)){
-            if(ficheroClientes.length()<0) {
-                oos=new ObjectOutputStream(salida);
-            }else{
-                oos=new MyObjectOutputStream(salida);
-            }
+            oos=new ObjectOutputStream(salida);
+
             oos.writeObject(registro);
             oos.flush();
             oos.close();
@@ -47,20 +47,20 @@ public class FicheroAccesoAleatorioDatos {
      * @throws IOException
      */
     public void leerRegistro(int pos) throws IOException {
-        int posicion = pos*tamanoRegistros;
-/*
-        ObjectInputStream ois =null;
-        try(FileInputStream fis = new FileInputStream(nombreFichero)){
-            ois = new ObjectInputStream(fis);
+        int posicion = pos * tamanoRegistros;
+        try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream(archivo))){
+            ois.skipNBytes(posicion);
+            int pont =(int) ficheroClientes.getFilePointer();
             Cliente c;
-            c = (Cliente)ois.readObject();
+            c = (Cliente) ois.readObject();
             System.out.println(c);
             ois.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }*/
+        }
 
-        byte [] array = new byte[(int)ficheroClientes.length()];
+
+        /*byte [] array = new byte[(int)ficheroClientes.length()];
         try (ByteArrayInputStream leer = new ByteArrayInputStream(array);
              ObjectInputStream entrada = new ObjectInputStream(leer)){
             ficheroClientes.seek(posicion);
@@ -72,7 +72,8 @@ public class FicheroAccesoAleatorioDatos {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
+
     }
 
     /**
