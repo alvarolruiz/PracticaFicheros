@@ -5,13 +5,14 @@ import java.util.InputMismatchException;
 import static com.company.Main.tecla;
 
 public class Validaciones {
+
     /**
      * Valida si la opción recibida se encuentra entre las posibles del menú
      *
      * @param op
      * @return boolean
      */
-    public static boolean validarOpcionMenu(int op) {
+    public static boolean validarOpcionMenu(int op) throws InputMismatchException{
         //TODO no puede recibir como parametro un string;
         boolean b=false;
         if(op>=0&&op<=5){
