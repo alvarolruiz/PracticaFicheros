@@ -6,6 +6,8 @@ import FileManager.FicheroAccesoAleatorioIndice;
 import Utilities.Constantes;
 import Utilities.Validaciones;
 import View.Menu;
+
+import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import static com.company.Main.tecla;
@@ -56,7 +58,6 @@ public class Gestora {
                 case (0):
                     fin = true;
                     break;
-
             }
         }
     }
@@ -68,12 +69,13 @@ public class Gestora {
 
     private void anadirCliente () {
         System.out.println("Introduce los siguientes datos para añadir un cliente nuevo.");
-        String nombre = Validaciones.validarNombre_Apellidos("Nombre");
-        String apellidos = Validaciones.validarNombre_Apellidos("Apellidos");
-        String dni = Validaciones.validarDni();
-        int telefono = Validaciones.validarTelefono();
-        String direccion = Validaciones.validarDireccion();
-        Cliente cliente = new Cliente(nombre, apellidos, dni, String.valueOf(telefono), direccion);
+        String nombre = Validaciones.PedirYValidarNombre();
+        String apellidos = Validaciones.PedirYValidarApellido();
+        String dni = Validaciones.PedirYValidarDni();
+        String telefono = Validaciones.PedirYValidarTelefono();
+        String direccion = Validaciones.PedirYValidarDireccion();
+
+        Cliente cliente = new Cliente(nombre, apellidos, dni, telefono, direccion);
         try {
             clientes.escribirRegistro(cliente);
         } catch (IOException e) {
@@ -85,6 +87,7 @@ public class Gestora {
      *
      */
     private void consultarCliente () {
+        // TODO index dni
         String dni ="";
         System.out.println("Introduce la pos del cliente a consultar");
         int posicion = tecla.nextInt();
@@ -93,6 +96,7 @@ public class Gestora {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Menu.askBackMenu();
     }
 
 

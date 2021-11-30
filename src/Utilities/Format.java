@@ -25,26 +25,5 @@ public class Format {
         return formato.toString();
     }
 
-    /**
-     * Método que formatea un entero para que ocupe siempre el espacio determinado por parámetros
-     * @param enteroAFormatear
-     * @param longInt
-     * @return
-     */
-    public static int formatearInt(int enteroAFormatear, int longInt){
-        String formatoCadena = obtenerFormatoInt(longInt);
-        return (String.valueOf(enteroAFormatear).length()<longInt) ? Integer.parseInt(String.format(formatoCadena, enteroAFormatear)) : Integer.parseInt(String.valueOf(enteroAFormatear).substring(0,longInt));
-    }
 
-    /**
-     * Método que devuelve un formato para un entero en función del parámetro longRegistro
-     * @param longRegistro
-     * @return String
-     */
-    public static String obtenerFormatoInt(int longRegistro) {
-        StringBuilder formato = new StringBuilder("%-");
-        formato.append(longRegistro);
-        formato.append('d');
-        return formato.toString();
-    }
 }
