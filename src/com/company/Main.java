@@ -16,22 +16,19 @@ import java.util.Scanner;
  * @since   2021-10-21
  */
 
-public class Main {
+//Todo Cuando introduces un registro que contenga ñ tood se desplaza una posicion a la derecha. Solucionar
+    //Todo Borrar registro
+    // Todo Exportar Fichero
+    // Todo Pruebas Unitarias
 
+
+public class Main {
 
 public static Scanner tecla = new Scanner(System.in);
 
-
-
     public static void main(String[] args) {
     Gestora gestora = new Gestora();
-        gestora.accionMenu();
-
-
-
-
-
-        // write your code here
+    gestora.accionMenu();
 
     }
 

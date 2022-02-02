@@ -2,6 +2,8 @@ package View;
 
 import Utilities.Validaciones;
 
+import java.util.InputMismatchException;
+
 import static com.company.Main.tecla;
 
 public class Menu {
@@ -26,7 +28,7 @@ public class Menu {
                 System.out.println("------------------");
                 System.out.println("Introduce una opción");
                 System.out.println();
-                opcion = tecla.nextInt();
+                opcion=tecla.nextInt();
             }while (!Validaciones.validarOpcionMenuPrincipal(opcion));
         return opcion;
     }

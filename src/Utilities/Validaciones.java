@@ -23,7 +23,6 @@ public class Validaciones {
      * @return boolean
      */
     public static boolean validarOpcionMenuPrincipal(int op) throws InputMismatchException{
-        //TODO no puede recibir como parametro un string;
         boolean b=false;
         if(op>=0&&op<=5){
             b=true;
@@ -94,6 +93,7 @@ public class Validaciones {
         boolean correcto = false;
         System.out.println("Dni:");
         do{
+
             dni = tecla.nextLine();
             try {
                 numero = Integer.parseInt(dni.substring(0, 8));
