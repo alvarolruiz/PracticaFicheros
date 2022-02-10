@@ -5,24 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class FicheroAccesoAleatorioIndice {
+public class FicheroIndice {
     public String nombreFichero;
     public HashMap<String, Integer> indice;
     public File file;
 
-    public FicheroAccesoAleatorioIndice(String nombre) throws IOException {
+    public FicheroIndice(String nombre) throws IOException {
         this.nombreFichero = nombre;
-        cargarIndex();
-    }
-
-    /**
-     * Método que inicializa el map que contendrá todos los registros de indice
-     *
-     * @throws IOException
-     */
-    public void cargarIndex() throws IOException {
-        indice = new HashMap<>();
+        this.indice = new HashMap<>();
         cargarIndexDeFichero();
+
     }
 
     /**
@@ -50,7 +42,8 @@ public class FicheroAccesoAleatorioIndice {
      */
     private void crearFichero() throws IOException {
         file = new File(nombreFichero);
-        if (!new File(nombreFichero).exists()) {
+        if(!file.exists())
+        {
             file.createNewFile();
         }
     }
@@ -58,8 +51,8 @@ public class FicheroAccesoAleatorioIndice {
     /**
      * Método que guarda el map en un fichero de propiedades, de modo que se podrá recuperar después con
      * el método cargarIndexDeFichero()
-     * Precondiciones: Que el map no sea nulo
-     * Postcondiciones: Se escribirán todas las entrys del map en el fichero
+     * <b>Precondiciones:</b> Que el map no sea nulo
+     * <b>Postcondiciones:</b> Se escribirán todas las entrys del map en el fichero
      */
     public void guardarIndiceEnFichero()  {
         Properties properties = new Properties();
@@ -80,7 +73,7 @@ public class FicheroAccesoAleatorioIndice {
      * @param dni
      * @param posicion
      */
-    public void addIndex(String dni, Integer posicion) { indice.put(dni, posicion); }
+    public void addIndex(String dni, Integer posicion) { indice.put(dni.toUpperCase(), posicion); }
 
     /**
      * Obtiene la posición que ocupa en el fichero principal de datos el registro con el dni pasado por parámetro.
@@ -97,6 +90,28 @@ public class FicheroAccesoAleatorioIndice {
             System.out.println("No existe un cliente con dicho dni, se mostrará el primer cliente guardado.");
         }
         return posicion;
+    }
+
+    /**
+     * <b>Precondiciones:</b> El dni recibido debe estar dentro del indice <br>
+     * <b>Postcondiciones:</b> Se eliminará el registro del indice
+     * @return la posición en la que se encontraba dicha persona y
+     */
+    public int getAndDeleteFromIndex(String dni){
+        Integer posicion= null;
+        if(indice.containsKey(dni)){
+            posicion = indice.get(dni);
+            eliminarRegistroIndex(posicion);
+        }else{
+            System.out.println("No existe un cliente con dicho dni");
+        }
+        return posicion;
+    }
+
+    private void eliminarRegistroIndex(int posicion) {
+        indice.values().removeIf(value -> (value==posicion));
+        file.delete();
+        guardarIndiceEnFichero();
     }
 
 

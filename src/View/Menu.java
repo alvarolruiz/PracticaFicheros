@@ -37,7 +37,7 @@ public class Menu {
         int opcion;
         do{
             System.out.println();
-            System.out.println("Codificación por defecto");
+            System.out.println("Seleccione el charset con el que se realizarán las exportaciones");
             System.out.println("------------------");
             System.out.println("1. US_ASCII");
             System.out.println("2. ISO_8859_1");

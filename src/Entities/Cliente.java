@@ -1,6 +1,7 @@
 package Entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Cliente implements Serializable {
     private String nombre;
@@ -46,5 +47,16 @@ public class Cliente implements Serializable {
         return this.getNombre() + this.getApellidos() + this.getDni() + this.getTelefono() + this.getDireccion();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(nombre, cliente.nombre) && Objects.equals(apellidos, cliente.apellidos) && Objects.equals(dni, cliente.dni) && Objects.equals(telefono, cliente.telefono) && Objects.equals(direccion, cliente.direccion);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(nombre, apellidos, dni, telefono, direccion);
+    }
 }

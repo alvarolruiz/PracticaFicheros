@@ -2,30 +2,37 @@ package com.company;
 
 import Entities.Cliente;
 
-import java.util.Scanner;
-
 import FileManager.FicheroAccesoAleatorioDatos;
-import FileManager.FicheroAccesoAleatorioIndice;
+import FileManager.FicheroIndice;
+import FileManager.FicheroConfiguracionExportacion;
+import FileManager.FicheroExportacionCliente;
 import Utilities.Constantes;
 import Utilities.Validaciones;
 import View.Menu;
 
-import java.io.EOFException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static com.company.Main.tecla;
 
 public class Gestora {
 
+    //Todo -->En menu exportacion volver al menu principal y avisar del charset seleccionado
+    //Todo -->A la hora de exportar hay problemas para escribir y leer el string con el charset. Funciona, revisaar
+    //Todo -->Pruebas unitarias
     public FicheroAccesoAleatorioDatos clientes;
-    public FicheroAccesoAleatorioIndice indice;
+    public FicheroIndice indice;
+    public FicheroExportacionCliente exportacion;
+    public FicheroConfiguracionExportacion configuracion;
 
     public Gestora() {
         try {
             clientes = new FicheroAccesoAleatorioDatos(Constantes.NOMBRE_FICHERO_DATOS,
                     "rw", Constantes.getTamanoRegistros());
-            indice = new FicheroAccesoAleatorioIndice(Constantes.NOMBRE_FICHERO_INDICE);
+            indice = new FicheroIndice(Constantes.NOMBRE_FICHERO_INDICE);
+            configuracion =new FicheroConfiguracionExportacion(Constantes.NOMBRE_FICHERO_CONFIGURACION);
+            exportacion = new FicheroExportacionCliente(Constantes.NOMBRE_FICHERO_EXPORTACION);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -114,7 +121,7 @@ public class Gestora {
         String dni;
         dni = tecla.nextLine();
         try {
-            int posicion = indice.getFromIndex(dni);
+            int posicion = indice.getFromIndex(dni.toUpperCase());
             clientes.leerRegistro(posicion);
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,12 +130,31 @@ public class Gestora {
         }
     }
 
-
-    private static void exportarClientes() {
-
+    private void exportarClientes() {
+        try {
+            exportacion.escribirClientesEnFichero(clientes.getListaClientes(),configuracion.getFormatoConfiguracion());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void configuracionDeExportacion() {
+    private void configuracionDeExportacion() {
+        boolean fin = false;
+        int op;
+        while (fin != true) {
+           op = Menu.imprimirMenuExportacion();
+           switch (op){
+               case 1: fin = configuracion.setFormatoConfiguracion(StandardCharsets.US_ASCII); break;
+               case 2: fin = configuracion.setFormatoConfiguracion(StandardCharsets.ISO_8859_1); break;
+               case 3: fin = configuracion.setFormatoConfiguracion(StandardCharsets.UTF_16); break;
+               case 4: fin = configuracion.setFormatoConfiguracion(StandardCharsets.UTF_16LE); break;
+               case 5: fin = configuracion.setFormatoConfiguracion(StandardCharsets.UTF_16BE); break;
+               case 6: fin = configuracion.setFormatoConfiguracion(StandardCharsets.UTF_8); break;
+               case 0: fin=true;
+           }
+           if(!fin) System.out.println("El formato seleccionado no es válido");
+        }
+        System.out.println(String.format("El fichero de clientes está listo para ser exportado en codificación %s ",configuracion.getFormatoConfiguracion()));
     }
 
     private void borrarCliente() {
@@ -136,12 +162,15 @@ public class Gestora {
         tecla.skip("\n");
         String dni;
         dni = tecla.nextLine();
-        int posicion = indice.getFromIndex(dni);
-        try{
-            clientes.eliminarRegistro(posicion);
-        }catch (IOException e){
-            e.printStackTrace();
+        Integer posicion = indice.getAndDeleteFromIndex(dni.toUpperCase());
+        if(posicion!=null){
+            try{
+                clientes.eliminarRegistro(posicion);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
         }
+
     }
 
 

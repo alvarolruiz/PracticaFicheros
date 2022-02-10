@@ -1,8 +1,11 @@
 package Utilities;
 
 public class Constantes {
-    public static final String NOMBRE_FICHERO_DATOS = "clientes.bin";
-    public static final String NOMBRE_FICHERO_INDICE = "indice_clientes.bin";
+    public static final String NOMBRE_FICHERO_DATOS = "src/Files/clientes.bin";
+    public static final String NOMBRE_FICHERO_INDICE = "src/Files/indice_clientes.bin";
+    public static final String NOMBRE_FICHERO_EXPORTACION = "src/Files/exportacionClientes.txt";
+    public static final String NOMBRE_FICHERO_CONFIGURACION = "src/Files/configuracionExportacion.txt";
+
     public static final int LONGITUD_NOMBRE=25;
     public static final int LONGITUD_APELLIDO=25;
     public static final int LONGITUD_DNI=9;

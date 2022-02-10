@@ -1,5 +1,7 @@
 package Utilities;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.InputMismatchException;
 
 import static com.company.Main.tecla;
@@ -155,4 +157,28 @@ public class Validaciones {
         }while(!correcto);
         return Format.formatearString(direccion, Constantes.LONGITUD_DIRECCION);
     }
+
+    /**
+     * <b>Precondiciones: </b> El charset debe estar entre los existentes
+     * <b>Poscondiciones: </b> El fichero se borrará y se volverá a crear con dicho charset
+     */
+
+    public static boolean validarCharset(Charset charsetName){
+        boolean correcto = false;
+        if (StandardCharsets.US_ASCII.equals(charsetName)) {
+            correcto = true;
+        } else if (StandardCharsets.ISO_8859_1.name().equals(charsetName)) {
+            correcto = true;
+        } else if (StandardCharsets.UTF_16.equals(charsetName)) {
+            correcto = true;
+        } else if (StandardCharsets.UTF_16LE.equals(charsetName)) {
+            correcto = true;
+        } else if (StandardCharsets.UTF_16BE.equals(charsetName)) {
+            correcto = true;
+        } else if (StandardCharsets.UTF_8.equals(charsetName)) {
+            correcto = true;
+        }
+        return correcto;
+    }
+
 }

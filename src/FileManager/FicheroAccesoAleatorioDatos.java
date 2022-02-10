@@ -2,17 +2,11 @@ package FileManager;
 
 import Entities.Cliente;
 import Utilities.Constantes;
-import Utilities.Validaciones;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-
-import static Utilities.Constantes.*;
-import static java.nio.charset.StandardCharsets.UTF_16;
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FicheroAccesoAleatorioDatos {
 
@@ -38,7 +32,6 @@ public class FicheroAccesoAleatorioDatos {
 
     public void crearFicheroClientes() throws FileNotFoundException {
             this.ficheroClientes = new RandomAccessFile(nombreFichero, permisos);
-
     }
     /**
      * Escribe un cliente completo en el random access file.
@@ -70,7 +63,11 @@ public class FicheroAccesoAleatorioDatos {
      * @throws IOException ha ocurrido algún error con el flujo de datos
      */
     public void escribirCampo(String campo) throws IOException {
-        ficheroClientes.write(campo.getBytes(Charset.defaultCharset()));
+        if(campo!= null){
+            ficheroClientes.write(campo.getBytes(Charset.defaultCharset()));
+        }else{
+            throw new NullPointerException();
+        }
     }
 
     /**
@@ -85,24 +82,23 @@ public class FicheroAccesoAleatorioDatos {
     /**
      * Este metodo recibirá una lista con todos los clientes que no han sido eliminados y la escribirá en el fichero.
      * vacio
-     * @param listaClientes
+     * @param lista
      */
-    public void actualizarFicheroNoEliminados(ArrayList<Cliente> lista) throws IOException {
+    public void actualizarFicheroNoEliminados(@NotNull ArrayList<Cliente> lista) throws IOException {
+        vaciarFichero();
         for (Cliente c:lista) {
             escribirRegistro(c);
         }
     }
 
-
-
-    /**
-     *
-     * Precondiciones: Que el fichero contenga algún registro en esa posición
-     *
-     * @param pos
-     * @throws IOException
-     */
-
+    public void vaciarFichero(){
+        try {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File(nombreFichero)));
+        bw.write("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * <b>Precondiciones:</b> Que exista un cliente en dicha posicion <br/>
@@ -111,12 +107,16 @@ public class FicheroAccesoAleatorioDatos {
      */
     public void leerRegistro(int pos) throws IOException {
         int posicion = pos * tamanoRegistros;
-        ficheroClientes.seek(posicion);
-        System.out.println(String.format("Nombre: %s", leerCampo("Nombre")));
-        System.out.println(String.format("Apellido: %s", leerCampo("Apellido")));
-        System.out.println(String.format("Dni: %s", leerCampo("Dni")));
-        System.out.println(String.format("Telefono: %s", leerCampo("Telefono")));
-        System.out.println(String.format("Direccion: %s", leerCampo("Direccion")));
+        if(ficheroClientes.length()!=0){
+            ficheroClientes.seek(posicion);
+            System.out.println(String.format("Nombre: %s", leerCampo("Nombre")));
+            System.out.println(String.format("Apellido: %s", leerCampo("Apellido")));
+            System.out.println(String.format("Dni: %s", leerCampo("Dni")));
+            System.out.println(String.format("Telefono: %s", leerCampo("Telefono")));
+            System.out.println(String.format("Direccion: %s", leerCampo("Direccion")));
+        }else{
+            System.out.println("El fichero está vacío");
+        }
     }
 
     /**
@@ -125,14 +125,9 @@ public class FicheroAccesoAleatorioDatos {
      * @throws IOException ha ocurrido algún error con el flujo de datos
      */
     public Cliente getDatosCliente(int pos) throws IOException{
-        int posicion = pos*tamanoRegistros;
-        String nombre = leerCampo("Nombre");
-        String apellidos = leerCampo("Apellido");
-        String dni = leerCampo("Dni");
-        String telefono = leerCampo("Telefono");
-        String direccion = leerCampo("Direccion");
-        Cliente cliente = null;
-        cliente = new Cliente(nombre, apellidos, dni, telefono, direccion);
+        ficheroClientes.seek(pos*tamanoRegistros);
+        Cliente cliente = new Cliente(leerCampo("Nombre"), leerCampo("Apellido"),
+                leerCampo("Dni"), leerCampo("Telefono"), leerCampo("Direccion"));
         return cliente;
     }
 
@@ -153,19 +148,37 @@ public class FicheroAccesoAleatorioDatos {
      * el fichero de datos se eliminará y se volverá a crear con el contenido de la lista
      */
     public boolean eliminarRegistro(int pos) throws IOException {
-        int nRegistros = Integer.valueOf((int)ficheroClientes.length()/tamanoRegistros);
+        long nRegistros = getNumeroRegistros();
         ArrayList <Cliente> regNoEliminados = new ArrayList<>();
         boolean borrado=false;
         for (int i = 0; i < nRegistros; i++) {
-            if(i!=pos) regNoEliminados.add(getDatosCliente(i));
+            if(i!=pos){
+                regNoEliminados.add(getDatosCliente(i));
+            }
         }
         if(regNoEliminados.size()==nRegistros-1){
-            eliminarFicheroClientesSiExiste();
-            crearFicheroClientes();
             actualizarFicheroNoEliminados(regNoEliminados);
             borrado=true;
         }
         return borrado;
+    }
+
+    public ArrayList<Cliente> getListaClientes () throws IOException {
+        ArrayList<Cliente> listaClientes = new ArrayList<>();
+        for (int i = 0; i < getNumeroRegistros(); i++) {
+                listaClientes.add(getDatosCliente(i));
+        }
+        return listaClientes;
+    }
+
+    public long getNumeroRegistros() {
+        long nRegistros = 0;
+        try{
+            nRegistros=ficheroClientes.length()/tamanoRegistros;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return nRegistros;
     }
 
 
